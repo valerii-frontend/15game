@@ -1,19 +1,16 @@
-# 🎳 Guess the word by definition! Game concept
+# 1️⃣5️⃣ 15 game ( the Gem Puzzle) 🧩
 
-### 📖 Rules 
+### 📖 Description
 
-+ 🔎 Enter the word that the other player will have to guess
-+ 🔑 Second player have equivalent count of try like a number of letter at the word
-+ 😊 Good luck and enjoy!  
++ The 15 puzzle (also called Gem Puzzle, Boss Puzzle, Game of Fifteen, Mystic Square and many others) is a sliding puzzle having 15 square tiles numbered 1–15 in a frame that is 4 tiles high and 4 tiles wide, leaving one unoccupied tile position. Tiles in the same row or column of the open position can be moved by sliding them horizontally or vertically, respectively. The goal of the puzzle is to place the tiles in numerical order.
++ Good luck and enjoy!  
 
 ### 🖼 Screenshot
 ![](./Screenshot.png)
-### 💻 [Live preview](https://guess-a-word.netlify.app/)
+### 💻 [Live preview](https://15game.netlify.app/)
 ### ⚙ Built with
 - HTML5 markup
 - CSS3
 - JavaScript
-- API [Unsplash](https://unsplash.com/documentation)
-- API [Free Dictionary](https://dictionaryapi.dev/)
 ## 👤 Author
 - LinkedIn - [v.lozghachov](https://www.linkedin.com/in/valerii-lozghachov/)

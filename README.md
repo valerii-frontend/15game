@@ -7,7 +7,7 @@
 
 ### 🖼 Screenshot
 ![](./Screenshot.png)
-### 💻 [Live preview](https://15game.netlify.app/)
+### 💻 [Live preview](https://thegempuzzle.netlify.app/)
 ### ⚙ Built with
 - HTML5 markup
 - CSS3

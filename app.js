@@ -11,6 +11,7 @@ let random = Math.floor(Math.random() * 100);
 // ===========================================================================================
 // INIT FUNCTION
 function init() {
+	body.style.background = 'url("https://picsum.photos/1920/1080") center/cover no-repeat';
 	board.style.pointerEvents = "none";
 	for (let index = 0; index <= 15; index++) {
 		const item = document.createElement("div");

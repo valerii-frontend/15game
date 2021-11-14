@@ -8,12 +8,12 @@ body {
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
-	transition: 1s;
+	transition: all 1s;
 	position: relative;
 	padding: 0;
 	margin: 0;
 	font-family: Trebuchet, Arial, sans-serif;
-	background: url(https:/source.unsplash.com/random) center/cover no-repeat;
+	background: url('https://picsum.photos/1920/1080') center/cover no-repeat;
 }
 body:after {
 	content: "";

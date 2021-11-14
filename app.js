@@ -120,15 +120,22 @@ function winnerPopUp() {
 // ===========================================================================================
 // GAME CLICKS
 board.addEventListener("click", function (e) {
+	let target = e.target;
+	let number = target.getAttribute("data-number");
 	move(e);
-	e.target.classList.add("clicked");
+	target.classList.add("clicked");
 	setTimeout(() => {
 		e.target.classList.remove("clicked");
 	}, 1000);
 	if (board.classList.contains("game") && checkWinner() == 16) {
 		winnerPopUp();
 	}
-	if (board.classList.contains("game") && e.target.classList.contains("item")) {
+
+	if (
+		board.classList.contains("game") &&
+		e.target.classList.contains("item") &&
+		number !== target.getAttribute("data-number")
+	) {
 		scoreCounter++;
 		score.textContent = scoreCounter;
 	}

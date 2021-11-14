@@ -12,5 +12,6 @@
 - HTML5 markup
 - CSS3
 - JavaScript
+- [Lorem Picsum photo](https://picsum.photos/)
 ## 👤 Author
 - LinkedIn - [v.lozghachov](https://www.linkedin.com/in/valerii-lozghachov/)

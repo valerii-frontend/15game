@@ -11,7 +11,8 @@ let random = Math.floor(Math.random() * 100);
 // ===========================================================================================
 // INIT FUNCTION
 function init() {
-	body.style.background = 'url("https:/source.unsplash.com/random") center/cover no-repeat';
+	let url ='https:/source.unsplash.com/random';
+	body.style.background = 'url(url) center/cover no-repeat';
 	board.style.pointerEvents = "none";
 	for (let index = 0; index <= 15; index++) {
 		const item = document.createElement("div");

@@ -7,7 +7,7 @@
 
 ### 🖼 Screenshot
 ![](./Screenshot.png)
-### 💻 [Live preview](https://valerii-frontend.github.io/15game/index.html)
+### 💻 [Live preview](https://thegempuzzle.netlify.app/ )
 ### ⚙ Built with
 - HTML5 markup
 - CSS3

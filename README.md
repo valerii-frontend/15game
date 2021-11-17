@@ -12,7 +12,7 @@
 
 ![](./Screenshot.png)
 
-### 💻 [Live preview](https://valerii-frontend.github.io/15game/index.html)
+### 💻 [Live preview](https://the15gamepuzzle.netlify.app/)
 
 ### ⚙ Built with
 

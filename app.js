@@ -3,10 +3,13 @@
 // ===========================================================================================
 const board = document.querySelector(".board");
 const body = document.querySelector("body");
+const header = document.querySelector(".header");
 // all buttons
 const buttons = {
 	newGame: document.querySelector(".header__new"),
 	reload: document.querySelector(".header__reload"),
+	about: document.querySelector(".about__btn"),
+	mute: document.querySelector(".muted"),
 };
 const audio = document.querySelector("audio");
 const score = { element: document.querySelector(".header__value span"), counter: 0 };
@@ -32,6 +35,7 @@ const time = {
 // current mix
 let currentGameArray = 0;
 let width;
+const rules = document.querySelector(".about__rules");
 // ELEMENT CLASS
 class Tag {
 	constructor(element) {
@@ -108,20 +112,15 @@ function checkWinner() {
 	});
 	return counter;
 }
-// WIN BANNER
-function winnerPopUp() {
-	const winner = document.createElement("div");
-	audio.setAttribute("src", "./sound/win.mp3");
+// POPUP
+function popUp(textClass, string, sound) {
+	const popUpEl = document.createElement("div");
+	audio.setAttribute("src", `./sound/${sound}.mp3`);
 	playSound();
-	winner.classList.add("win");
-	winner.innerHTML = `<span class='win__string'>You are winner!</span><span>Your time is <span class='win__time'>${
-		time.min < 10 ? "0" + time.min : time.min
-	} </span> min. <span class='win__time'>${
-		time.sec < 10 ? "0" + time.sec : time.sec
-	}</span> sec.</span><span>It took you <span class='win__score'>${
-		score.counter + 1
-	}</span> moves to solve the puzzle<span>`;
-	body.appendChild(winner);
+	popUpEl.classList.add("popUp");
+	popUpEl.classList.add(textClass);
+	popUpEl.innerHTML = string;
+	body.appendChild(popUpEl);
 	setTimeout(() => {
 		location.reload();
 	}, 7000);
@@ -137,7 +136,29 @@ board.addEventListener("click", function (e) {
 	else target.classList.remove("place");
 	playSound();
 	if (board.classList.contains("game") && checkWinner() == 16) {
-		winnerPopUp();
+		let winString = `<span class='popUp__string'>You are winner!</span><span>Your time is <span class='popUp__time'>${
+			time.min < 10 ? "0" + time.min : time.min
+		} </span> min. <span class='popUp__time'>${
+			time.sec < 10 ? "0" + time.sec : time.sec
+		}</span> sec.</span><span>It took you <span class='popUp__score'>${
+			score.counter + 1
+		}</span> moves to solve the puzzle</span>`;
+		popUp("popUp_win", winString, "win");
+	}
+	if (
+		board.classList.contains("game") &&
+		checkWinner() == 14 &&
+		document.querySelector(".empty").getAttribute("data-currentplace") ==
+			document.querySelector(".empty").getAttribute("data-startposition")
+	) {
+		let endString = `<span class='popUp__string'>The End! This combination is impossible to assemble</span>
+    <span>Your time is 
+    <span class='popUp__time'>${time.min < 10 ? "0" + time.min : time.min} 
+    </span> min. <span class='popUp__time'>${time.sec < 10 ? "0" + time.sec : time.sec}</span> sec.</span>
+    <span>It took you <span class='popUp__score'>${score.counter + 1}</span> moves to solve the puzzle</span>`;
+		document.querySelector('.item[data-currentplace="15"][data-startposition="14"]').classList.add("fail");
+		document.querySelector('.item[data-currentplace="14"][data-startposition="15"]').classList.add("fail");
+		popUp("popUp_end", endString, "end");
 	}
 	if (position !== target.getAttribute("data-currentplace")) {
 		score.counter++;
@@ -156,8 +177,8 @@ function loading() {
 }
 window.addEventListener("load", loading);
 // ===========================================================================================
-// NEW GAME AND RELOAD BUTTONS
-
+// BUTTONS EVENTS
+// NEW
 buttons.newGame.addEventListener("click", (e) => {
 	board.style.transform = "scale(0)";
 	audio.setAttribute("src", "./sound/newgame.mp3");
@@ -166,6 +187,7 @@ buttons.newGame.addEventListener("click", (e) => {
 		location.reload();
 	}, 1500);
 });
+// RELOAD
 buttons.reload.addEventListener("click", function (e) {
 	audio.setAttribute("src", "./sound/newgame.mp3");
 	playSound();
@@ -179,6 +201,7 @@ buttons.reload.addEventListener("click", function (e) {
 	board.style.transform = "scale(0)";
 	board.style.opacity = 0;
 	score.element.style.opacity = 0;
+	buttons.mute.style.opacity = 0;
 	console.log("===================RELOAD===================");
 	setTimeout(() => {
 		board.style.pointerEvents = "all";
@@ -188,7 +211,34 @@ buttons.reload.addEventListener("click", function (e) {
 		score.counter = 0;
 		score.element.textContent = score.counter;
 		score.element.style.opacity = 1;
+		buttons.mute.style.opacity = 1;
 	}, 1000);
+});
+// ABOUT
+buttons.about.addEventListener("click", function (e) {
+	if (this.classList.contains("about__btn_active")) {
+		rules.classList.remove("about__rules_active");
+		this.classList.remove("about__btn_active");
+		header.classList.remove("header_active");
+		this.textContent = "❔";
+	} else {
+		this.textContent = "✅";
+		this.classList.add("about__btn_active");
+		rules.classList.add("about__rules_active");
+		header.classList.add("header_active");
+	}
+});
+// MUTE
+buttons.mute.addEventListener("click", function (e) {
+	if (this.classList.contains("muted_active")) {
+		this.textContent = "🔊";
+		this.classList.remove("muted_active");
+		audio.muted = false;
+	} else {
+		this.textContent = "🔈";
+		this.classList.add("muted_active");
+		audio.muted = true;
+	}
 });
 // ===========================================================================================
 // SOUND FUNC
@@ -200,6 +250,7 @@ function playSound() {
 }
 // ===========================================================================================
 // SORT
+
 function sort() {
 	const arrayEl = board.querySelectorAll(".item");
 	const map = [...arrayEl].map((x) => x.getAttribute("data-startPosition"));

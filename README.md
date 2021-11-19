@@ -12,13 +12,14 @@
 
 ![](./Screenshot.png)
 
-### 💻 [Live preview](https://the15gamepuzzle.netlify.app/)
+### 💻 [Live preview](https://thegempuzzle.netlify.app/)
 
 ### ⚙ Built with
 
 - HTML5 markup
-- CSS3
+- SCSS
 - JavaScript
+- [Lorem picsum Photo API](https://picsum.photos/)
 
 ## 👤 Author
 

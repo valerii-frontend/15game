@@ -21,17 +21,22 @@
 		<meta name="msapplication-TileColor" content="#ffffff" />
 		<meta name="msapplication-TileImage" content="./favicon/ms-icon-144x144.png" />
 		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="./css/style.css" />
 		<title>15 puzzle game</title>
 	</head>
 	<body>
 		<header class="header">
 			<div class="header__wrapper">
 				<div class="header__btns">
-					<div class="header__new header__btn">New Game</div>
-					<div class="header__reload header__btn">🔄</div>
+					<div class="header__new header__btn" title="New Game">🏁</div>
+					<div class="header__reload header__btn" title="Reload Game">🔄</div>
 				</div>
-				<div class="header__value">
+				<div class="header__timer" title="Game Timer">
+					<div class="header__min">00</div>
+					:
+					<div class="header__sec">00</div>
+				</div>
+				<div class="header__value" title="Moves Counter">
 					<p>Moves:</p>
 					<span>0</span>
 				</div>

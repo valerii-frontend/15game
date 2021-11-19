@@ -1,73 +1,93 @@
+"use strict";
 // MAIN VARS
 // ===========================================================================================
 const board = document.querySelector(".board");
 const body = document.querySelector("body");
-const newGameBtn = document.querySelector(".header__new");
-const reloadGameBtn = document.querySelector(".header__reload");
+// all buttons
+const buttons = {
+	newGame: document.querySelector(".header__new"),
+	reload: document.querySelector(".header__reload"),
+};
 const audio = document.querySelector("audio");
-const field = board.getBoundingClientRect();
-let score = document.querySelector(".header__value span");
-let scoreCounter = 0;
-let randomArr = 0;
-// let random = Math.floor(Math.random() * 1000);
+const score = { element: document.querySelector(".header__value span"), counter: 0 };
+// time obj
+const time = {
+	minEl: document.querySelector(".header__min"),
+	secEl: document.querySelector(".header__sec"),
+	min: 0,
+	sec: 0,
+	start: function () {
+		this.secEl.textContent = "00";
+		this.minEl.textContent = "00";
+		this.secEl.style.opacity = 0;
+		this.minEl.style.opacity = 0;
+		this.min = 0;
+		this.sec = 0;
+		setTimeout(() => {
+			this.secEl.style.opacity = 1;
+			this.minEl.style.opacity = 1;
+		}, 1000);
+	},
+};
+// current mix
+let currentGameArray = 0;
+let width;
+// ELEMENT CLASS
+class Tag {
+	constructor(element) {
+		this.element = element;
+		this.top = this.element.offsetTop;
+		this.left = this.element.offsetLeft;
+		this.position = this.element.getAttribute("data-currentplace");
+	}
+	setData(item) {
+		this.element.style.top = `${item.top}px`;
+		this.element.style.left = `${item.left}px`;
+		this.element.setAttribute("data-currentplace", item.position);
+		item.element.style.top = `${this.top}px`;
+		item.element.style.left = `${this.left}px`;
+		item.element.setAttribute("data-currentplace", this.position);
+	}
+}
+
 // ===========================================================================================
 // INIT FUNCTION
 function init() {
 	board.style.pointerEvents = "none";
-
+	board.style.transform = "scale(1)";
 	for (let index = 0; index <= 15; index++) {
 		const item = document.createElement("div");
 		item.setAttribute("data-startPosition", index + 1);
 		board.appendChild(item);
 		item.classList.add("item");
-		let itemCoord = item.getBoundingClientRect();
+		width = item.offsetWidth;
 		let counter = index + 1;
 		if (counter <= 4) {
 			item.style.top = 0;
-			item.style.left = `${item.offsetWidth * index}px`;
+			item.style.left = `${width * index}px`;
 		} else if (counter <= 8 && counter > 4) {
-			item.style.top = `${item.offsetHeight}px`;
-			item.style.left = `${item.offsetWidth * (index - 4)}px`;
+			item.style.top = `${width}px`;
+			item.style.left = `${width * (index - 4)}px`;
 		} else if (counter <= 12 && counter > 8) {
-			item.style.top = `${item.offsetHeight * 2}px`;
-			item.style.left = `${item.offsetWidth * (index - 8)}px`;
+			item.style.top = `${width * 2}px`;
+			item.style.left = `${width * (index - 8)}px`;
 		} else if (counter <= 16 && counter > 12) {
-			item.style.top = `${item.offsetHeight * 3}px`;
-			item.style.left = `${item.offsetWidth * (index - 12)}px`;
+			item.style.top = `${width * 3}px`;
+			item.style.left = `${width * (index - 12)}px`;
 		}
 	}
 }
 // MOVE THE NUMBER ( MAIN LOGIC )
 function move(e) {
-	let clicked = e.target;
-	console.log("click");
-	let emptyEl = document.querySelector(".empty");
-	let empty = emptyEl.getBoundingClientRect();
-	let target = clicked.getBoundingClientRect();
-	let emptyCoords = [emptyEl.offsetTop, emptyEl.offsetLeft];
-	let targetCoords = [clicked.offsetTop, clicked.offsetLeft];
-	let dataPos = [emptyEl.getAttribute("data-currentplace"), clicked.getAttribute("data-currentplace")];
-	if (
-		empty.top == target.top &&
-		(empty.left - target.left == clicked.offsetWidth || empty.left - target.left == -clicked.offsetWidth)
-	) {
-		clicked.style.top = `${emptyCoords[0]}px`;
-		clicked.style.left = `${emptyCoords[1]}px`;
-		emptyEl.style.top = `${targetCoords[0]}px`;
-		emptyEl.style.left = `${targetCoords[1]}px`;
-		clicked.setAttribute("data-currentplace", dataPos[0]);
-		emptyEl.setAttribute("data-currentplace", dataPos[1]);
+	const empty = new Tag(document.querySelector(".empty"));
+	const target = new Tag(e.target);
+	if (empty.top == target.top && (empty.left - target.left == width || empty.left - target.left == -width)) {
+		empty.setData(target);
+		target.setData(empty);
 	}
-	if (
-		empty.left == target.left &&
-		(empty.top - target.top == clicked.offsetWidth || empty.top - target.top == -clicked.offsetWidth)
-	) {
-		clicked.style.top = `${emptyCoords[0]}px`;
-		clicked.style.left = `${emptyCoords[1]}px`;
-		emptyEl.style.top = `${targetCoords[0]}px`;
-		emptyEl.style.left = `${targetCoords[1]}px`;
-		clicked.setAttribute("data-currentplace", dataPos[0]);
-		emptyEl.setAttribute("data-currentplace", dataPos[1]);
+	if (empty.left == target.left && (empty.top - target.top == width || empty.top - target.top == -width)) {
+		empty.setData(target);
+		target.setData(empty);
 	}
 }
 // ===========================================================================================
@@ -107,8 +127,8 @@ board.addEventListener("click", function (e) {
 		winnerPopUp();
 	}
 	if (position !== target.getAttribute("data-currentplace")) {
-		scoreCounter++;
-		score.textContent = scoreCounter;
+		score.counter++;
+		score.element.textContent = score.counter;
 	}
 });
 // ===========================================================================================
@@ -117,6 +137,7 @@ function loading() {
 	console.log("===================START===================");
 	init();
 	sort();
+	timer();
 	board.classList.add("game");
 	board.style.pointerEvents = "all";
 }
@@ -124,23 +145,36 @@ window.addEventListener("load", loading);
 // ===========================================================================================
 // NEW GAME AND RELOAD BUTTONS
 
-newGameBtn.addEventListener("click", (e) => location.reload());
-reloadGameBtn.addEventListener("click", function (e) {
+buttons.newGame.addEventListener("click", (e) => {
+	board.style.transform = "scale(0)";
+	audio.setAttribute("src", "./sound/newgame.mp3");
+	playSound();
+	setTimeout(() => {
+		location.reload();
+	}, 1500);
+});
+buttons.reload.addEventListener("click", function (e) {
+	audio.setAttribute("src", "./sound/newgame.mp3");
+	playSound();
+	setTimeout(() => {
+		audio.setAttribute("src", "./sound/calc.mp3");
+	}, 1500);
 	board.innerHTML = "";
 	init();
 	reload();
+	time.start();
 	board.style.transform = "scale(0)";
 	board.style.opacity = 0;
-	score.style.opacity = 0;
+	score.element.style.opacity = 0;
 	console.log("===================RELOAD===================");
 	setTimeout(() => {
 		board.style.pointerEvents = "all";
 		board.classList.add("game");
 		board.style.opacity = 1;
 		board.style.transform = "scale(1)";
-		scoreCounter = 0;
-		score.textContent = scoreCounter;
-		score.style.opacity = 1;
+		score.counter = 0;
+		score.element.textContent = score.counter;
+		score.element.style.opacity = 1;
 	}, 1000);
 });
 // ===========================================================================================
@@ -149,8 +183,7 @@ reloadGameBtn.addEventListener("click", function (e) {
 function playSound() {
 	audio.pause();
 	let playPromise = audio.play();
-	if (playPromise !== undefined)
-		playPromise.then(() => console.log("sound-click")).catch((error) => console.log(error));
+	if (playPromise !== undefined) playPromise.catch((error) => console.log(error));
 }
 // ===========================================================================================
 // SORT
@@ -161,8 +194,7 @@ function sort() {
 		let j = Math.floor(Math.random() * (i + 1)); // случайный индекс от 0 до i
 		[map[i], map[j]] = [map[j], map[i]];
 	}
-	randomArr = map;
-	console.log(randomArr);
+	currentGameArray = map;
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", map[i]);
 		element.setAttribute("data-currentPlace", i + 1);
@@ -178,14 +210,27 @@ function sort() {
 // RELOAD
 function reload() {
 	const arrayEl = board.querySelectorAll(".item");
-	console.log(randomArr);
 	arrayEl.forEach((element, i) => {
-		element.setAttribute("data-startPosition", randomArr[i]);
+		element.setAttribute("data-startPosition", currentGameArray[i]);
 		element.setAttribute("data-currentPlace", i + 1);
-		element.innerText = Number(randomArr[i]);
-		if (randomArr[i] == 16) {
+		element.innerText = Number(currentGameArray[i]);
+		if (currentGameArray[i] == 16) {
 			element.classList.add("empty");
 			element.innerText = "";
 		}
 	});
+}
+// ===========================================================================================
+// TIMER
+function timer() {
+	setInterval(() => {
+		if (time.sec == 60) {
+			time.sec = 0;
+			time.min++;
+			time.minEl.textContent = time.min < 10 ? "0" + time.min : time.min;
+		}
+
+		time.secEl.textContent = time.sec < 10 ? "0" + time.sec : time.sec;
+		time.sec++;
+	}, 1000);
 }

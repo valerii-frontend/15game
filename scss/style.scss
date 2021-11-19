@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:regular,700);
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -13,8 +14,8 @@ body {
 	position: relative;
 	padding: 0;
 	margin: 0;
-	font-family: Trebuchet, Arial, sans-serif;
-	background: url("../background.jpg") center/cover no-repeat;
+	font-family: Ubuntu;
+	transition: all 1s ease;
 	&:after {
 		content: "";
 		position: absolute;
@@ -24,8 +25,9 @@ body {
 		left: 0;
 		background-color: #8bc6ec;
 		background-image: linear-gradient(135deg, #3d6a88 0%, #4a4d88 100%);
-		opacity: 0.7;
+		opacity: 0.8;
 		z-index: -1;
+		backdrop-filter: blur(100px);
 	}
 }
 // .header
@@ -140,7 +142,7 @@ body {
 	background-color: #2ecc71;
 	cursor: pointer;
 	z-index: 2;
-	opacity: 0.8;
+	opacity: 0.7;
 	transition: 0.3s all;
 	&:hover {
 		background-color: #27ae60;
@@ -172,17 +174,34 @@ body {
 	transform: translate(-50%, -50%) scale(0);
 	background-color: #e69854;
 	width: 390px;
-	height: 50px;
 	opacity: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
+	padding: 10px;
 	animation: popUp 1s ease-in-out 1 forwards;
 	color: #ffffff;
 	font-size: 24px;
 	font-weight: 700;
 	border: 2px solid #dfdfdf;
 	z-index: 3;
+	span {
+		margin-bottom: 10px;
+	}
+	&__string {
+		color: #fbff00;
+		text-shadow: 0 0 5px rgb(59, 0, 155);
+	}
+	&__time {
+		color: rgb(0, 245, 224);
+		text-shadow: 0 0 2px #333;
+	}
+	&__score {
+		text-shadow: 0 0 2px #333;
+		color: rgb(21, 255, 0);
+		font-size: 2rem;
+	}
 }
 
 // .footer
@@ -229,7 +248,7 @@ footer {
 		transform: translate(-50%, -50%) scale(0);
 	}
 	to {
-		opacity: 1;
+		opacity: 0.9;
 		transform: translate(-50%, -50%) scale(1);
 	}
 }

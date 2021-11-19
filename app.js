@@ -55,6 +55,13 @@ class Tag {
 function init() {
 	board.style.pointerEvents = "none";
 	board.style.transform = "scale(1)";
+	fetch(`https://picsum.photos/${window.innerWidth}/${window.innerHeight}`).then(
+		(response) => (body.style.background = `url('${response.url}') center/200% no-repeat`),
+		setTimeout(() => {
+			body.style.backgroundSize = "100%";
+		}, 1000)
+	);
+
 	for (let index = 0; index <= 15; index++) {
 		const item = document.createElement("div");
 		item.setAttribute("data-startPosition", index + 1);
@@ -107,11 +114,17 @@ function winnerPopUp() {
 	audio.setAttribute("src", "./sound/win.mp3");
 	playSound();
 	winner.classList.add("win");
-	winner.textContent = "You are winner!🎉";
+	winner.innerHTML = `<span class='win__string'>You are winner!</span><span>Your time is <span class='win__time'>${
+		time.min < 10 ? "0" + time.min : time.min
+	} </span> min. <span class='win__time'>${
+		time.sec < 10 ? "0" + time.sec : time.sec
+	}</span> sec.</span><span>It took you <span class='win__score'>${
+		score.counter + 1
+	}</span> moves to solve the puzzle<span>`;
 	body.appendChild(winner);
 	setTimeout(() => {
 		location.reload();
-	}, 3000);
+	}, 7000);
 }
 // ===========================================================================================
 // GAME CLICKS

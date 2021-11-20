@@ -10,7 +10,7 @@
 
 ### 🖼 Screenshot
 
-![](./Screenshot.png)
+![] (./Screenshot.png)
 
 ### 💻 [Live preview](https://the15gamepuzzle.netlify.app/)
 

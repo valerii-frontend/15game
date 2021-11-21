@@ -145,21 +145,6 @@ board.addEventListener("click", function (e) {
 		}</span> moves to solve the puzzle</span>`;
 		popUp("popUp_win", winString, "win");
 	}
-	if (
-		board.classList.contains("game") &&
-		checkWinner() == 14 &&
-		document.querySelector(".empty").getAttribute("data-currentplace") ==
-			document.querySelector(".empty").getAttribute("data-startposition")
-	) {
-		let endString = `<span class='popUp__string'>The End! This combination is impossible to assemble</span>
-    <span>Your time is 
-    <span class='popUp__time'>${time.min < 10 ? "0" + time.min : time.min} 
-    </span> min. <span class='popUp__time'>${time.sec < 10 ? "0" + time.sec : time.sec}</span> sec.</span>
-    <span>It took you <span class='popUp__score'>${score.counter + 1}</span> moves to solve the puzzle</span>`;
-		document.querySelector('.item[data-currentplace="15"][data-startposition="14"]').classList.add("fail");
-		document.querySelector('.item[data-currentplace="14"][data-startposition="15"]').classList.add("fail");
-		popUp("popUp_end", endString, "end");
-	}
 	if (position !== target.getAttribute("data-currentplace")) {
 		score.counter++;
 		score.element.textContent = score.counter;
@@ -249,16 +234,48 @@ function playSound() {
 	if (playPromise !== undefined) playPromise.catch((error) => console.log(error));
 }
 // ===========================================================================================
+// FIND THE ROW WITH EMPTY AND GET IT SUMMARY
+function getRow(array) {
+	let rowObj = { 1: [], 2: [], 3: [], 4: [] };
+	let sum = 0;
+	array.forEach((element, index) => {
+		if (element == 16) element = 0;
+		if (index >= 0 && index < 4) rowObj[1].push(+element); //1
+		if (index >= 4 && index < 8) rowObj[2].push(+element); //2
+		if (index >= 8 && index < 12) rowObj[3].push(+element); //3
+		if (index >= 12) rowObj[4].push(+element); //4
+	});
+	for (let i = 1; i <= 4; i++) {
+		if (rowObj[i].includes(0)) sum += i;
+	}
+	array.forEach((element, index) => {
+		if (element == 16) element = 0;
+		for (let i = index + 1; i < array.length; i++) {
+			let arrItem = array[i];
+			if (element > arrItem) sum++;
+		}
+	});
+	return sum;
+}
+// ===========================================================================================
 // SORT
-
 function sort() {
 	const arrayEl = board.querySelectorAll(".item");
-	const map = [...arrayEl].map((x) => x.getAttribute("data-startPosition"));
-	for (let i = map.length - 1; i > 0; i--) {
-		let j = Math.floor(Math.random() * (i + 1)); // случайный индекс от 0 до i
-		[map[i], map[j]] = [map[j], map[i]];
+	const map = [...arrayEl].map((x) => +x.getAttribute("data-startPosition"));
+	let n = 0;
+	while (n < 100) {
+		for (let i = map.length - 1; i > 0; i--) {
+			let j = Math.floor(Math.random() * (i + 1));
+			[map[i], map[j]] = [map[j], map[i]];
+		}
+		console.log(getRow(map));
+		if (getRow(map) % 2 == 0) {
+			break;
+		} else {
+			n++;
+		}
 	}
-	currentGameArray = map;
+	console.log(map);
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", map[i]);
 		element.setAttribute("data-currentPlace", i + 1);
@@ -270,6 +287,7 @@ function sort() {
 	});
 }
 
+// getRow() == 0 || >0
 // ===========================================================================================
 // RELOAD
 function reload() {

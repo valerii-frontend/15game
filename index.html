@@ -28,8 +28,8 @@
 		<header class="header">
 			<div class="header__wrapper">
 				<div class="header__btns">
-					<div class="header__new header__btn" title="New Game">🆕</div>
-					<div class="header__reload header__btn" title="Reload Game">🔄</div>
+					<div class="header__new btn" title="New Game">🆕</div>
+					<div class="header__reload btn" title="Reload Game">🔄</div>
 				</div>
 				<div class="header__timer" title="Game Timer">
 					<div class="header__min">00</div>
@@ -37,7 +37,7 @@
 					<div class="header__sec">00</div>
 				</div>
 				<div class="header__about about">
-					<span class="about__btn header__btn">❔</span>
+					<span class="about__btn btn">❔</span>
 					<p class="about__rules">
 						<span class="about__text"
 							><strong>The goal of the game</strong> is to move the items around the box to arrange them by numbers,
@@ -54,9 +54,14 @@
 		</header>
 
 		<div class="board"></div>
-		<div class="header__btn muted">🔊</div>
-		<footer>
-			Coded by <a href="https://www.linkedin.com/in/valerii-lozghachov/" target="_blank">v.lozghachov ®</a>
+
+		<footer class="footer">
+			<div class="footer__wrap">
+				<span class="footer__author"
+					>Coded by <a href="https://www.linkedin.com/in/valerii-lozghachov/" target="_blank">v.lozghachov ®</a></span
+				>
+				<div class="btn muted">🔊</div>
+			</div>
 		</footer>
 
 		<script src="app.js"></script>

@@ -144,6 +144,11 @@ board.addEventListener("click", function (e) {
 			score.counter + 1
 		}</span> moves to solve the puzzle</span>`;
 		popUp("popUp_win", winString, "win");
+		board.querySelectorAll(".item").forEach((e, i) => {
+			setTimeout(() => {
+				e.classList.add("win");
+			}, `${i}00`);
+		});
 	}
 	if (position !== target.getAttribute("data-currentplace")) {
 		score.counter++;
@@ -177,7 +182,7 @@ buttons.reload.addEventListener("click", function (e) {
 	audio.setAttribute("src", "./sound/newgame.mp3");
 	playSound();
 	setTimeout(() => {
-		audio.setAttribute("src", "./sound/click.mp3");
+		audio.setAttribute("src", "./sound/calc.mp3");
 	}, 1500);
 	board.innerHTML = "";
 	init();
@@ -186,6 +191,7 @@ buttons.reload.addEventListener("click", function (e) {
 	board.style.transform = "scale(0)";
 	board.style.opacity = 0;
 	score.element.style.opacity = 0;
+	buttons.mute.style.opacity = 0;
 	console.log("===================RELOAD===================");
 	setTimeout(() => {
 		board.style.pointerEvents = "all";
@@ -195,7 +201,8 @@ buttons.reload.addEventListener("click", function (e) {
 		score.counter = 0;
 		score.element.textContent = score.counter;
 		score.element.style.opacity = 1;
-		}, 1000);
+		buttons.mute.style.opacity = 1;
+	}, 1000);
 });
 // ABOUT
 buttons.about.addEventListener("click", function (e) {
@@ -273,8 +280,9 @@ function sort() {
 			n++;
 		}
 	}
+
+	currentGameArray = map;
 	console.log(map);
-		currentGameArray = map;
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", map[i]);
 		element.setAttribute("data-currentPlace", i + 1);

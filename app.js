@@ -186,7 +186,6 @@ buttons.reload.addEventListener("click", function (e) {
 	board.style.transform = "scale(0)";
 	board.style.opacity = 0;
 	score.element.style.opacity = 0;
-	buttons.mute.style.opacity = 0;
 	console.log("===================RELOAD===================");
 	setTimeout(() => {
 		board.style.pointerEvents = "all";
@@ -196,8 +195,7 @@ buttons.reload.addEventListener("click", function (e) {
 		score.counter = 0;
 		score.element.textContent = score.counter;
 		score.element.style.opacity = 1;
-		buttons.mute.style.opacity = 1;
-	}, 1000);
+		}, 1000);
 });
 // ABOUT
 buttons.about.addEventListener("click", function (e) {

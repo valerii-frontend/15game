@@ -177,7 +177,7 @@ buttons.reload.addEventListener("click", function (e) {
 	audio.setAttribute("src", "./sound/newgame.mp3");
 	playSound();
 	setTimeout(() => {
-		audio.setAttribute("src", "./sound/calc.mp3");
+		audio.setAttribute("src", "./sound/click.mp3");
 	}, 1500);
 	board.innerHTML = "";
 	init();

@@ -276,6 +276,7 @@ function sort() {
 		}
 	}
 	console.log(map);
+		currentGameArray = map;
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", map[i]);
 		element.setAttribute("data-currentPlace", i + 1);

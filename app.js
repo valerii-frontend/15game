@@ -3,10 +3,13 @@
 // ===========================================================================================
 const board = document.querySelector(".board");
 const body = document.querySelector("body");
+const header = document.querySelector(".header");
 // all buttons
 const buttons = {
 	newGame: document.querySelector(".header__new"),
 	reload: document.querySelector(".header__reload"),
+	about: document.querySelector(".about__btn"),
+	mute: document.querySelector(".muted"),
 };
 const audio = document.querySelector("audio");
 const score = { element: document.querySelector(".header__value span"), counter: 0 };
@@ -32,6 +35,7 @@ const time = {
 // current mix
 let currentGameArray = 0;
 let width;
+const rules = document.querySelector(".about__rules");
 // ELEMENT CLASS
 class Tag {
 	constructor(element) {
@@ -108,20 +112,15 @@ function checkWinner() {
 	});
 	return counter;
 }
-// WIN BANNER
-function winnerPopUp() {
-	const winner = document.createElement("div");
-	audio.setAttribute("src", "./sound/win.mp3");
+// POPUP
+function popUp(textClass, string, sound) {
+	const popUpEl = document.createElement("div");
+	audio.setAttribute("src", `./sound/${sound}.mp3`);
 	playSound();
-	winner.classList.add("win");
-	winner.innerHTML = `<span class='win__string'>You are winner!</span><span>Your time is <span class='win__time'>${
-		time.min < 10 ? "0" + time.min : time.min
-	} </span> min. <span class='win__time'>${
-		time.sec < 10 ? "0" + time.sec : time.sec
-	}</span> sec.</span><span>It took you <span class='win__score'>${
-		score.counter + 1
-	}</span> moves to solve the puzzle<span>`;
-	body.appendChild(winner);
+	popUpEl.classList.add("popUp");
+	popUpEl.classList.add(textClass);
+	popUpEl.innerHTML = string;
+	body.appendChild(popUpEl);
 	setTimeout(() => {
 		location.reload();
 	}, 7000);
@@ -137,7 +136,19 @@ board.addEventListener("click", function (e) {
 	else target.classList.remove("place");
 	playSound();
 	if (board.classList.contains("game") && checkWinner() == 16) {
-		winnerPopUp();
+		let winString = `<span class='popUp__string'>You are winner!</span><span>Your time is <span class='popUp__time'>${
+			time.min < 10 ? "0" + time.min : time.min
+		} </span> min. <span class='popUp__time'>${
+			time.sec < 10 ? "0" + time.sec : time.sec
+		}</span> sec.</span><span>It took you <span class='popUp__score'>${
+			score.counter + 1
+		}</span> moves to solve the puzzle</span>`;
+		popUp("popUp_win", winString, "win");
+		board.querySelectorAll(".item").forEach((e, i) => {
+			setTimeout(() => {
+				e.classList.add("win");
+			}, `${i}00`);
+		});
 	}
 	if (position !== target.getAttribute("data-currentplace")) {
 		score.counter++;
@@ -156,8 +167,8 @@ function loading() {
 }
 window.addEventListener("load", loading);
 // ===========================================================================================
-// NEW GAME AND RELOAD BUTTONS
-
+// BUTTONS EVENTS
+// NEW
 buttons.newGame.addEventListener("click", (e) => {
 	board.style.transform = "scale(0)";
 	audio.setAttribute("src", "./sound/newgame.mp3");
@@ -166,6 +177,7 @@ buttons.newGame.addEventListener("click", (e) => {
 		location.reload();
 	}, 1500);
 });
+// RELOAD
 buttons.reload.addEventListener("click", function (e) {
 	audio.setAttribute("src", "./sound/newgame.mp3");
 	playSound();
@@ -179,6 +191,7 @@ buttons.reload.addEventListener("click", function (e) {
 	board.style.transform = "scale(0)";
 	board.style.opacity = 0;
 	score.element.style.opacity = 0;
+	buttons.mute.style.opacity = 0;
 	console.log("===================RELOAD===================");
 	setTimeout(() => {
 		board.style.pointerEvents = "all";
@@ -188,7 +201,34 @@ buttons.reload.addEventListener("click", function (e) {
 		score.counter = 0;
 		score.element.textContent = score.counter;
 		score.element.style.opacity = 1;
+		buttons.mute.style.opacity = 1;
 	}, 1000);
+});
+// ABOUT
+buttons.about.addEventListener("click", function (e) {
+	if (this.classList.contains("about__btn_active")) {
+		rules.classList.remove("about__rules_active");
+		this.classList.remove("about__btn_active");
+		header.classList.remove("header_active");
+		this.textContent = "❔";
+	} else {
+		this.textContent = "✅";
+		this.classList.add("about__btn_active");
+		rules.classList.add("about__rules_active");
+		header.classList.add("header_active");
+	}
+});
+// MUTE
+buttons.mute.addEventListener("click", function (e) {
+	if (this.classList.contains("muted_active")) {
+		this.textContent = "🔊";
+		this.classList.remove("muted_active");
+		audio.muted = false;
+	} else {
+		this.textContent = "🔈";
+		this.classList.add("muted_active");
+		audio.muted = true;
+	}
 });
 // ===========================================================================================
 // SOUND FUNC
@@ -199,15 +239,50 @@ function playSound() {
 	if (playPromise !== undefined) playPromise.catch((error) => console.log(error));
 }
 // ===========================================================================================
+// FIND THE ROW WITH EMPTY AND GET IT SUMMARY
+function getRow(array) {
+	let rowObj = { 1: [], 2: [], 3: [], 4: [] };
+	let sum = 0;
+	array.forEach((element, index) => {
+		if (element == 16) element = 0;
+		if (index >= 0 && index < 4) rowObj[1].push(+element); //1
+		if (index >= 4 && index < 8) rowObj[2].push(+element); //2
+		if (index >= 8 && index < 12) rowObj[3].push(+element); //3
+		if (index >= 12) rowObj[4].push(+element); //4
+	});
+	for (let i = 1; i <= 4; i++) {
+		if (rowObj[i].includes(0)) sum += i;
+	}
+	array.forEach((element, index) => {
+		if (element == 16) element = 0;
+		for (let i = index + 1; i < array.length; i++) {
+			let arrItem = array[i];
+			if (element > arrItem) sum++;
+		}
+	});
+	return sum;
+}
+// ===========================================================================================
 // SORT
 function sort() {
 	const arrayEl = board.querySelectorAll(".item");
-	const map = [...arrayEl].map((x) => x.getAttribute("data-startPosition"));
-	for (let i = map.length - 1; i > 0; i--) {
-		let j = Math.floor(Math.random() * (i + 1)); // случайный индекс от 0 до i
-		[map[i], map[j]] = [map[j], map[i]];
+	const map = [...arrayEl].map((x) => +x.getAttribute("data-startPosition"));
+	let n = 0;
+	while (n < 100) {
+		for (let i = map.length - 1; i > 0; i--) {
+			let j = Math.floor(Math.random() * (i + 1));
+			[map[i], map[j]] = [map[j], map[i]];
+		}
+		console.log(getRow(map));
+		if (getRow(map) % 2 == 0) {
+			break;
+		} else {
+			n++;
+		}
 	}
+
 	currentGameArray = map;
+	console.log(map);
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", map[i]);
 		element.setAttribute("data-currentPlace", i + 1);
@@ -219,6 +294,7 @@ function sort() {
 	});
 }
 
+// getRow() == 0 || >0
 // ===========================================================================================
 // RELOAD
 function reload() {

@@ -10,15 +10,16 @@
 
 ### 🖼 Screenshot
 
-![](./Screenshot.png)
+![](./game.png)
 
 ### 💻 [Live preview](https://the15gamepuzzle.netlify.app/)
 
 ### ⚙ Built with
 
 - HTML5 markup
-- CSS3
+- SCSS
 - JavaScript
+- [Pipsum photos API](https://picsum.photos/)
 
 ## 👤 Author
 

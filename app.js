@@ -59,16 +59,11 @@ class Tag {
 function init() {
 	board.style.pointerEvents = "none";
 	board.style.transform = "scale(1)";
-	fetch(`https://picsum.photos/${window.innerWidth}/${window.innerHeight}`).then(
-		(response) => (body.style.background = `url('${response.url}') center/200% no-repeat`),
-		setTimeout(() => {
-			body.style.backgroundSize = "100%";
-		}, 1000)
-	);
 
 	for (let index = 0; index <= 15; index++) {
 		const item = document.createElement("div");
 		item.setAttribute("data-startPosition", index + 1);
+
 		board.appendChild(item);
 		item.classList.add("item");
 		width = item.offsetWidth;
@@ -134,7 +129,7 @@ board.addEventListener("click", function (e) {
 	if (target.getAttribute("data-startPosition") == target.getAttribute("data-currentPlace"))
 		target.classList.add("place");
 	else target.classList.remove("place");
-	playSound();
+
 	if (board.classList.contains("game") && checkWinner() == 16) {
 		let winString = `<span class='popUp__string'>You are winner!</span><span>Your time is <span class='popUp__time'>${
 			time.min < 10 ? "0" + time.min : time.min
@@ -152,6 +147,7 @@ board.addEventListener("click", function (e) {
 	}
 	if (position !== target.getAttribute("data-currentplace")) {
 		score.counter++;
+		playSound();
 		score.element.textContent = score.counter;
 	}
 });
@@ -182,7 +178,7 @@ buttons.reload.addEventListener("click", function (e) {
 	audio.setAttribute("src", "./sound/newgame.mp3");
 	playSound();
 	setTimeout(() => {
-		audio.setAttribute("src", "./sound/calc.mp3");
+		audio.setAttribute("src", "./sound/click.mp3");
 	}, 1500);
 	board.innerHTML = "";
 	init();
@@ -210,9 +206,7 @@ buttons.about.addEventListener("click", function (e) {
 		rules.classList.remove("about__rules_active");
 		this.classList.remove("about__btn_active");
 		header.classList.remove("header_active");
-		this.textContent = "❔";
 	} else {
-		this.textContent = "✅";
 		this.classList.add("about__btn_active");
 		rules.classList.add("about__rules_active");
 		header.classList.add("header_active");
@@ -221,11 +215,11 @@ buttons.about.addEventListener("click", function (e) {
 // MUTE
 buttons.mute.addEventListener("click", function (e) {
 	if (this.classList.contains("muted_active")) {
-		this.textContent = "🔊";
 		this.classList.remove("muted_active");
+		this.innerHTML = '<img src="./icons/sound.svg" alt="on" />';
 		audio.muted = false;
 	} else {
-		this.textContent = "🔈";
+		this.innerHTML = '		<img src="./icons/muted.svg" alt="off" />';
 		this.classList.add("muted_active");
 		audio.muted = true;
 	}
@@ -235,8 +229,9 @@ buttons.mute.addEventListener("click", function (e) {
 
 function playSound() {
 	audio.pause();
-	let playPromise = audio.play();
-	if (playPromise !== undefined) playPromise.catch((error) => console.log(error));
+	audio.play();
+	// let playPromise = audio.play();
+	// if (playPromise !== undefined) playPromise.catch((error) => console.log(error));
 }
 // ===========================================================================================
 // FIND THE ROW WITH EMPTY AND GET IT SUMMARY
@@ -280,13 +275,14 @@ function sort() {
 			n++;
 		}
 	}
-
+	// const map = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 15];
 	currentGameArray = map;
 	console.log(map);
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", map[i]);
 		element.setAttribute("data-currentPlace", i + 1);
 		element.innerText = Number(map[i]);
+		element.setAttribute("title", Number(map[i]));
 		if (map[i] == 16) {
 			element.classList.add("empty");
 			element.innerText = "";
@@ -302,7 +298,9 @@ function reload() {
 	arrayEl.forEach((element, i) => {
 		element.setAttribute("data-startPosition", currentGameArray[i]);
 		element.setAttribute("data-currentPlace", i + 1);
+		element.setAttribute("title", currentGameArray[i]);
 		element.innerText = Number(currentGameArray[i]);
+
 		if (currentGameArray[i] == 16) {
 			element.classList.add("empty");
 			element.innerText = "";

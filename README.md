@@ -10,7 +10,7 @@
 
 ### 🖼 Screenshot
 
-![](./screenshot.png)
+![](./Screenshot.png)
 
 ### 💻 [Live preview](https://valerii-frontend.github.io/15game/)
 
